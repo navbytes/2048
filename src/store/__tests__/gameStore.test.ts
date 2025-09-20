@@ -11,6 +11,9 @@ vi.mock('@/utils', () => ({
   isValidMove: vi.fn(),
   getBestScore: vi.fn(),
   saveBestScore: vi.fn(),
+  loadGameState: vi.fn(),
+  saveGameState: vi.fn(),
+  clearGameState: vi.fn(),
 }))
 
 const mockedUtils = vi.mocked(utils)
@@ -53,6 +56,9 @@ describe('gameStore', () => {
       canUndo: false,
     })
     mockedUtils.saveBestScore.mockImplementation(() => {})
+    mockedUtils.loadGameState.mockReturnValue(null)
+    mockedUtils.saveGameState.mockImplementation(() => {})
+    mockedUtils.clearGameState.mockImplementation(() => {})
   })
 
   afterEach(() => {

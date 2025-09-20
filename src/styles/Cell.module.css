@@ -1,0 +1,609 @@
+/* Base cell styles with performance optimizations */
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: var(--cell-size);
+  height: var(--cell-size);
+  border-radius: var(--radius-lg);
+  font-weight: var(--font-weight-bold);
+  font-family: var(--font-family-numbers);
+  transition: all var(--transition-fast);
+  border: 2px solid var(--border-cell);
+  cursor: pointer;
+  will-change: transform, box-shadow;
+  transform: translateZ(0); /* Enable hardware acceleration */
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  padding: 2px;
+}
+
+/* Hover effects are now tier-specific - see enhanced hover effects section below */
+
+/* Empty cell */
+.empty {
+  background-color: var(--bg-cell-empty);
+  color: transparent;
+  cursor: default;
+  transition: background-color var(--transition-normal);
+}
+
+.empty:hover {
+  transform: none;
+}
+
+/* New tile appearance animation */
+.newTile {
+  animation: appearBounce 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes appearBounce {
+  0% {
+    transform: scale(0) translateZ(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2) translateZ(0);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1) translateZ(0);
+    opacity: 1;
+  }
+}
+
+/* Pulse animation for high-value tiles */
+.pulse {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 20px var(--pulse-gold);
+  }
+  50% {
+    box-shadow: 0 0 30px var(--pulse-gold-strong);
+  }
+}
+
+/* Winner tile special effects */
+.winner {
+  animation: winnerGlow 1.5s ease-in-out infinite;
+  position: relative;
+}
+
+.winner::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(
+    45deg,
+    var(--color-gold),
+    var(--color-gold-light),
+    var(--color-gold),
+    var(--color-gold-light)
+  );
+  border-radius: 10px;
+  z-index: -1;
+  animation: rotate 3s linear infinite;
+}
+
+@keyframes winnerGlow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 25px var(--glow-gold),
+      0 0 50px var(--glow-gold);
+  }
+  50% {
+    box-shadow:
+      0 0 35px var(--glow-gold-strong),
+      0 0 70px var(--glow-gold-strong);
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Enhanced tile styling with gradients and shadows */
+
+/* Tile 2 - Light cream with subtle gradient (Tier 1: Early Game) */
+.tile2 {
+  background: var(--tile-2-bg);
+  color: var(--tile-2-text);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-tier-1);
+  border-radius: var(--radius-tier-1);
+  box-shadow:
+    var(--shadow-tier-1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+  transform: translateZ(0);
+}
+
+.tile2:hover {
+  box-shadow:
+    var(--shadow-md),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+/* Tile 4 - Warm beige with enhanced depth (Tier 1: Early Game) */
+.tile4 {
+  background: var(--tile-4-bg);
+  color: var(--tile-4-text);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-tier-1);
+  border-radius: var(--radius-tier-1);
+  box-shadow:
+    var(--shadow-tier-1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+  transform: translateZ(0);
+}
+
+.tile4:hover {
+  box-shadow:
+    var(--shadow-lg),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+/* Tile 8 - Orange with vibrant gradient (Tier 1: Early Game) */
+.tile8 {
+  background: var(--tile-8-bg);
+  color: var(--tile-8-text);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-tier-1);
+  border-radius: var(--radius-tier-1);
+  box-shadow:
+    var(--shadow-tier-1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transform: translateZ(0);
+}
+
+.tile8:hover {
+  box-shadow:
+    var(--shadow-lg),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Tile 16 - Deep orange with warm glow (Tier 1: Early Game) */
+.tile16 {
+  background: var(--tile-16-bg);
+  color: var(--tile-16-text);
+  font-size: 17px;
+  font-weight: var(--font-weight-tier-1);
+  border-radius: var(--radius-tier-1);
+  box-shadow:
+    var(--shadow-tier-1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  transform: translateZ(0);
+}
+
+.tile16:hover {
+  box-shadow:
+    var(--shadow-xl),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Tile 32 - Red-orange with intensity (Tier 2: Mid Game) */
+.tile32 {
+  background: var(--tile-32-bg);
+  color: var(--tile-32-text);
+  font-size: 17px;
+  font-weight: var(--font-weight-tier-2);
+  border-radius: var(--radius-tier-2);
+  box-shadow:
+    var(--shadow-tier-2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  transform: translateZ(0);
+}
+
+.tile32:hover {
+  box-shadow:
+    var(--shadow-xl),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Tile 64 - Vibrant red with strong presence (Tier 2: Mid Game) */
+.tile64 {
+  background: var(--tile-64-bg);
+  color: var(--tile-64-text);
+  font-size: 17px;
+  font-weight: var(--font-weight-tier-2);
+  border-radius: var(--radius-tier-2);
+  box-shadow:
+    var(--shadow-tier-2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  transform: translateZ(0);
+}
+
+.tile64:hover {
+  box-shadow:
+    var(--shadow-2xl),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Tile 128 - Golden yellow with luxury feel (Tier 2: Mid Game) */
+.tile128 {
+  background: var(--tile-128-bg);
+  color: var(--tile-128-text);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-tier-2);
+  border-radius: var(--radius-tier-2);
+  box-shadow:
+    var(--shadow-tier-2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+  transform: translateZ(0);
+}
+
+.tile128:hover {
+  box-shadow:
+    var(--shadow-2xl),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+/* Tile 256 - Rich gold with depth (Tier 3: Late Game) */
+.tile256 {
+  background: var(--tile-256-bg);
+  color: var(--tile-256-text);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-tier-3);
+  border-radius: var(--radius-tier-3);
+  box-shadow:
+    var(--shadow-tier-3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+  transform: translateZ(0);
+}
+
+.tile256:hover {
+  box-shadow:
+    var(--shadow-2xl),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+/* Tile 512 - Bright gold with energy (Tier 3: Late Game) */
+.tile512 {
+  background: var(--tile-512-bg);
+  color: var(--tile-512-text);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-tier-3);
+  border-radius: var(--radius-tier-3);
+  box-shadow:
+    var(--shadow-tier-3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  transform: translateZ(0);
+}
+
+.tile512:hover {
+  box-shadow:
+    var(--shadow-2xl),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+/* Tile 1024 - Brilliant gold with pulse effect (Tier 3: Late Game) */
+.tile1024 {
+  background: var(--tile-1024-bg);
+  color: var(--tile-1024-text);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-tier-3);
+  border-radius: var(--radius-tier-3);
+  box-shadow:
+    var(--shadow-tier-3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  border: 2px solid var(--color-gold);
+  transform: translateZ(0);
+}
+
+.tile1024:hover {
+  box-shadow:
+    var(--shadow-2xl),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+/* Tile 2048 - Championship gold with winner effects (Tier 4: Master) */
+.tile2048 {
+  background: var(--tile-2048-bg);
+  color: var(--tile-2048-text);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-tier-4);
+  border-radius: var(--radius-tier-4);
+  box-shadow:
+    var(--shadow-tier-4),
+    0 0 40px var(--glow-gold),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  border: 3px solid var(--color-gold);
+  position: relative;
+  transform: translateZ(0);
+}
+
+.tile2048:hover {
+  box-shadow:
+    var(--shadow-2xl),
+    0 0 60px var(--glow-gold-strong),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+/* Tiles higher than 2048 - Dark premium styling (Tier 4: Master+) */
+.tileHigh {
+  background: var(--tile-high-bg);
+  color: var(--tile-high-text);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-tier-4);
+  border-radius: var(--radius-tier-4);
+  box-shadow:
+    var(--shadow-tier-4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+  border: 2px solid var(--border-high-tile);
+  transform: translateZ(0);
+}
+
+.tileHigh:hover {
+  box-shadow:
+    var(--shadow-2xl),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Accessibility and performance optimizations */
+@media (prefers-reduced-motion: reduce) {
+  .cell {
+    transition: none;
+  }
+
+  .newTile {
+    animation: none;
+  }
+
+  .pulse {
+    animation: none;
+  }
+
+  .winner {
+    animation: none;
+  }
+
+  .winner::before {
+    animation: none;
+  }
+}
+
+/* Focus styles for accessibility */
+.cell:focus {
+  outline: 3px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+/* Performance optimization for animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Enhanced merge animation with tier-based scaling */
+.merging {
+  animation: mergeScale 0.25s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes mergeScale {
+  0% {
+    transform: scale(1) translateZ(0);
+  }
+  60% {
+    transform: scale(1.15) translateZ(0);
+  }
+  100% {
+    transform: scale(1) translateZ(0);
+  }
+}
+
+/* Milestone achievement animation for high-value tiles */
+.milestone {
+  animation: milestoneAchievement 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes milestoneAchievement {
+  0% {
+    transform: scale(0.8) translateZ(0);
+    opacity: 0;
+  }
+  25% {
+    transform: scale(1.3) translateZ(0);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(0.95) translateZ(0);
+    opacity: 0.9;
+  }
+  75% {
+    transform: scale(1.1) translateZ(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) translateZ(0);
+    opacity: 1;
+  }
+}
+
+/* Breathing animation for 1024+ tiles */
+.breathing {
+  animation: breathingPulse 3s ease-in-out infinite;
+}
+
+@keyframes breathingPulse {
+  0%,
+  100% {
+    transform: scale(1) translateZ(0);
+    box-shadow: inherit;
+  }
+  50% {
+    transform: scale(1.02) translateZ(0);
+    box-shadow:
+      inherit,
+      0 0 20px rgba(255, 215, 0, 0.3);
+  }
+}
+
+/* Accessibility pattern overlays for colorblind users */
+.pattern-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.1;
+  transition: opacity var(--transition-normal);
+}
+
+/* Tier-based patterns */
+.tile2::after,
+.tile4::after,
+.tile8::after,
+.tile16::after {
+  background-image: radial-gradient(
+    circle at 25% 25%,
+    currentColor 1px,
+    transparent 1px
+  );
+  background-size: 8px 8px;
+}
+
+.tile32::after,
+.tile64::after,
+.tile128::after {
+  background-image: linear-gradient(
+    45deg,
+    currentColor 1px,
+    transparent 1px,
+    transparent 7px,
+    currentColor 1px
+  );
+  background-size: 8px 8px;
+}
+
+.tile256::after,
+.tile512::after,
+.tile1024::after {
+  background-image:
+    linear-gradient(0deg, currentColor 1px, transparent 1px),
+    linear-gradient(90deg, currentColor 1px, transparent 1px);
+  background-size: 6px 6px;
+}
+
+.tile2048::after,
+.tileHigh::after {
+  background-image:
+    linear-gradient(
+      45deg,
+      currentColor 1px,
+      transparent 1px,
+      transparent 3px,
+      currentColor 1px
+    ),
+    linear-gradient(
+      -45deg,
+      currentColor 1px,
+      transparent 1px,
+      transparent 3px,
+      currentColor 1px
+    );
+  background-size: 4px 4px;
+}
+
+/* Show patterns in high contrast mode or user preference */
+@media (prefers-contrast: high) {
+  .pattern-overlay::after {
+    opacity: 0.2;
+  }
+}
+
+/* Enhanced hover effects for tiers */
+.cell:not(.empty):hover {
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Tier 1 hover: gentle lift */
+.tile2:hover,
+.tile4:hover,
+.tile8:hover,
+.tile16:hover {
+  transform: scale(1.03) translateY(-1px) translateZ(0);
+}
+
+/* Tier 2 hover: medium lift with glow */
+.tile32:hover,
+.tile64:hover,
+.tile128:hover {
+  transform: scale(1.04) translateY(-2px) translateZ(0);
+  box-shadow:
+    var(--shadow-tier-2),
+    0 0 15px rgba(255, 165, 0, 0.3);
+}
+
+/* Tier 3 hover: strong lift with enhanced glow */
+.tile256:hover,
+.tile512:hover,
+.tile1024:hover {
+  transform: scale(1.05) translateY(-3px) translateZ(0);
+  box-shadow:
+    var(--shadow-tier-3),
+    0 0 25px rgba(255, 215, 0, 0.4);
+}
+
+/* Tier 4 hover: dramatic lift with golden aura */
+.tile2048:hover,
+.tileHigh:hover {
+  transform: scale(1.06) translateY(-4px) translateZ(0);
+  box-shadow:
+    var(--shadow-tier-4),
+    0 0 35px rgba(255, 215, 0, 0.5);
+}
+
+/* Binary mode styling for better multiline display */
+.binaryMode {
+  font-size: 11px !important;
+  line-height: 1.1;
+  padding: 4px;
+}
+
+.binaryMode.tile2,
+.binaryMode.tile4,
+.binaryMode.tile8,
+.binaryMode.tile16 {
+  font-size: 12px !important;
+}
+
+.binaryMode.tile32,
+.binaryMode.tile64,
+.binaryMode.tile128 {
+  font-size: 10px !important;
+}
+
+.binaryMode.tile256,
+.binaryMode.tile512,
+.binaryMode.tile1024,
+.binaryMode.tile2048,
+.binaryMode.tileHigh {
+  font-size: 9px !important;
+}

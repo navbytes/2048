@@ -6,17 +6,37 @@ import {
   isValidMove,
   getBestScore,
   saveBestScore,
+  loadGameState,
+  saveGameState,
+  clearGameState,
 } from '@/utils'
 import type { Direction, GameState, GameStore } from '@/types'
 
-const initialGameState: GameState = {
-  board: createInitialBoard(),
-  score: 0,
-  bestScore: getBestScore(),
-  gameOver: false,
-  won: false,
-  canUndo: false,
+const createInitialGameState = (): GameState => {
+  const savedState = loadGameState()
+
+  if (savedState?.board) {
+    return {
+      board: savedState.board,
+      score: savedState.score ?? 0,
+      bestScore: getBestScore(),
+      gameOver: savedState.gameOver ?? false,
+      won: savedState.won ?? false,
+      canUndo: savedState.canUndo ?? false,
+    }
+  }
+
+  return {
+    board: createInitialBoard(),
+    score: 0,
+    bestScore: getBestScore(),
+    gameOver: false,
+    won: false,
+    canUndo: false,
+  }
 }
+
+const initialGameState = createInitialGameState()
 
 export const useGameStore = create<GameStore>()(
   subscribeWithSelector((set, get) => ({
@@ -51,20 +71,48 @@ export const useGameStore = create<GameStore>()(
         saveBestScore(newBestScore)
       }
 
-      set({
+      const updatedState = {
         ...newGameState,
         bestScore: newBestScore,
         previousState,
         canUndo: true,
+      }
+
+      set(updatedState)
+
+      // Save to localStorage (excluding previousState)
+      saveGameState({
+        board: updatedState.board,
+        score: updatedState.score,
+        bestScore: updatedState.bestScore,
+        gameOver: updatedState.gameOver,
+        won: updatedState.won,
+        canUndo: updatedState.canUndo,
       })
     },
 
     newGame: () => {
-      set({
-        ...initialGameState,
+      const newGameState = {
         board: createInitialBoard(),
+        score: 0,
         bestScore: getBestScore(),
+        gameOver: false,
+        won: false,
+        canUndo: false,
         previousState: null,
+      }
+
+      set(newGameState)
+
+      // Clear localStorage and save new game state
+      clearGameState()
+      saveGameState({
+        board: newGameState.board,
+        score: newGameState.score,
+        bestScore: newGameState.bestScore,
+        gameOver: newGameState.gameOver,
+        won: newGameState.won,
+        canUndo: newGameState.canUndo,
       })
     },
 
@@ -72,10 +120,22 @@ export const useGameStore = create<GameStore>()(
       const { previousState } = get()
       if (!previousState) return
 
-      set({
+      const undoState = {
         ...previousState,
         previousState: null,
         canUndo: false,
+      }
+
+      set(undoState)
+
+      // Save undone state to localStorage
+      saveGameState({
+        board: undoState.board,
+        score: undoState.score,
+        bestScore: undoState.bestScore,
+        gameOver: undoState.gameOver,
+        won: undoState.won,
+        canUndo: undoState.canUndo,
       })
     },
   }))

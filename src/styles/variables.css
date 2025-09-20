@@ -1,0 +1,465 @@
+/* 2048 Game Design System - CSS Variables with Dark/Light Mode Support */
+
+:root {
+  /* Color scheme detection */
+  color-scheme: light dark;
+
+  /* ========== SPACING SYSTEM ========== */
+  /* Base spacing unit - all other spacing derives from this */
+  --spacing-unit: 4px;
+
+  --spacing-xs: var(--spacing-unit); /* 4px */
+  --spacing-sm: calc(var(--spacing-unit) * 2); /* 8px */
+  --spacing-md: calc(var(--spacing-unit) * 3); /* 12px */
+  --spacing-lg: calc(var(--spacing-unit) * 4); /* 16px */
+  --spacing-xl: calc(var(--spacing-unit) * 5); /* 20px */
+  --spacing-2xl: calc(var(--spacing-unit) * 6); /* 24px */
+  --spacing-3xl: calc(var(--spacing-unit) * 8); /* 32px */
+  --spacing-4xl: calc(var(--spacing-unit) * 10); /* 40px */
+
+  /* ========== GAME LAYOUT SYSTEM ========== */
+  /* Base game dimensions - all layout derives from cell size */
+  --cell-size: 70px; /* Base cell dimension */
+  --cell-gap: calc(var(--cell-size) * 0.14); /* ~10px - proportional gap */
+  --board-padding: calc(
+    var(--cell-gap) * 1.5
+  ); /* 15px - padding scales with gap */
+
+  /* Board size formula: (4 cells × cell-size) + (3 gaps × cell-gap) + (2 × padding) */
+  --board-size: calc(
+    (4 * var(--cell-size)) + (3 * var(--cell-gap)) + (2 * var(--board-padding))
+  ); /* 280px + 30px + 30px = 340px */
+
+  /* ========== BORDER RADIUS SYSTEM ========== */
+  /* Base radius unit - maintains design consistency */
+  --radius-unit: 2px;
+
+  --radius-sm: calc(var(--radius-unit) * 2); /* 4px */
+  --radius-md: calc(var(--radius-unit) * 3); /* 6px */
+  --radius-lg: calc(var(--radius-unit) * 4); /* 8px */
+  --radius-xl: calc(var(--radius-unit) * 5); /* 10px */
+
+  /* Tier-based radius progression (higher tiers = sharper corners) */
+  --radius-tier-1: calc(var(--radius-sm) * 3); /* 2-16: very rounded = 12px */
+  --radius-tier-2: var(--radius-lg); /* 32-128: medium rounded = 8px */
+  --radius-tier-3: var(--radius-md); /* 256-1024: less rounded = 6px */
+  --radius-tier-4: var(--radius-sm); /* 2048+: sharp, mature = 4px */
+
+  /* ========== TYPOGRAPHY SYSTEM ========== */
+  --font-family-primary: 'Arial', sans-serif;
+  --font-family-system: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --font-family-numbers: 'Inter', sans-serif;
+
+  /* Typography scale based on modular scale (1.125 minor third ratio) */
+  --font-size-base: 16px; /* Base font size */
+  --font-scale: 1.125; /* Minor third ratio */
+
+  --font-size-xs: calc(
+    var(--font-size-base) / var(--font-scale) / var(--font-scale)
+  ); /* ~12.6px */
+  --font-size-sm: calc(var(--font-size-base) / var(--font-scale)); /* ~14.2px */
+  --font-size-md: calc(
+    var(--font-size-base) * 0.875
+  ); /* 14px - slight adjustment */
+  --font-size-lg: calc(var(--font-size-base) * var(--font-scale)); /* 18px */
+  --font-size-xl: calc(
+    var(--font-size-base) * var(--font-scale) * var(--font-scale)
+  ); /* ~20.25px */
+  --font-size-2xl: calc(var(--font-size-base) * 1.5); /* 24px */
+  --font-size-3xl: calc(var(--font-size-base) * 2); /* 32px */
+  --font-size-4xl: calc(var(--font-size-base) * 3); /* 48px */
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  --font-weight-black: 900;
+
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.4;
+  --line-height-relaxed: 1.5;
+
+  /* ========== SHADOW SYSTEM ========== */
+  /* Base shadow properties for mathematical progression */
+  --shadow-base-blur: 4px;
+  --shadow-base-opacity: 0.1;
+  --shadow-blur-scale: 2;
+  --shadow-opacity-increment: 0.02;
+
+  --shadow-sm: 0 2px var(--shadow-base-blur)
+    rgba(0, 0, 0, var(--shadow-base-opacity));
+  --shadow-md: 0 4px calc(var(--shadow-base-blur) * var(--shadow-blur-scale))
+    rgba(
+      0,
+      0,
+      0,
+      calc(var(--shadow-base-opacity) + var(--shadow-opacity-increment))
+    );
+  --shadow-lg: 0 6px calc(var(--shadow-base-blur) * 4)
+    rgba(0, 0, 0, calc(var(--shadow-base-opacity) + 0.05));
+  --shadow-xl: 0 8px calc(var(--shadow-base-blur) * 6)
+    rgba(0, 0, 0, calc(var(--shadow-base-opacity) + 0.08));
+  --shadow-2xl: 0 12px calc(var(--shadow-base-blur) * 8)
+    rgba(0, 0, 0, calc(var(--shadow-base-opacity) + 0.1));
+
+  /* Tier-based shadow progression using base system */
+  --shadow-tier-1: var(--shadow-sm); /* 2-16: subtle */
+  --shadow-tier-2: var(--shadow-md); /* 32-128: medium */
+  --shadow-tier-3: var(--shadow-lg); /* 256-1024: strong */
+  --shadow-tier-4: var(--shadow-xl); /* 2048+: dramatic */
+
+  /* Font weight progression for tiles */
+  --font-weight-tier-1: var(--font-weight-semibold); /* 2-16: semibold = 600 */
+  --font-weight-tier-2: var(--font-weight-bold); /* 32-128: bold = 700 */
+  --font-weight-tier-3: var(
+    --font-weight-extrabold
+  ); /* 256-1024: extrabold = 800 */
+  --font-weight-tier-4: var(--font-weight-black); /* 2048+: black = 900 */
+
+  /* ========== TRANSITION SYSTEM ========== */
+  --transition-fast: 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --transition-normal: 0.2s ease-out;
+  --transition-slow: 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  /* ========== LIGHT MODE COLORS ========== */
+  /* Background colors */
+  --bg-primary: #faf8ef;
+  --bg-secondary: #f2ebdf;
+  --bg-board: #bbada0;
+  --bg-cell-empty: #cdc1b4;
+  --bg-score-box: #bbada0;
+
+  /* Text colors */
+  --text-primary: #776e65;
+  --text-secondary: #8f7a66;
+  --text-light: #f9f6f2;
+  --text-muted: #999;
+  --text-score-label: #eee4da;
+  --text-score-value: #ffffff;
+
+  /* Border colors */
+  --border-cell: #bbada0;
+  --border-focus: #0066cc;
+  --border-game-focus: #8f7a66;
+
+  /* Button colors with mathematical relationships */
+  --btn-primary-base: #ed6c02;
+  --btn-secondary-base: #8f7a66;
+
+  --btn-primary-bg: var(--btn-primary-base);
+  --btn-primary-hover: color-mix(
+    in srgb,
+    var(--btn-primary-base) 85%,
+    #ff8800 15%
+  );
+  --btn-secondary-bg: var(--btn-secondary-base);
+  --btn-secondary-hover: color-mix(
+    in srgb,
+    var(--btn-secondary-base) 85%,
+    #ffffff 15%
+  );
+  --btn-disabled-bg: var(--bg-cell-empty);
+  --btn-text: var(--text-light);
+
+  /* Status colors */
+  --status-win-bg: #edc22e;
+  --status-game-over-bg: #edc53f;
+  --status-text: #f9f6f2;
+
+  /* ========== TILE COLORS - LIGHT MODE ========== */
+  /* Base tile colors */
+  --tile-2-bg: linear-gradient(135deg, #eee4da 0%, #e4d7c3 100%);
+  --tile-2-text: #776e65;
+  --tile-4-bg: linear-gradient(135deg, #ede0c8 0%, #e6d1b3 100%);
+  --tile-4-text: #776e65;
+
+  /* Orange progression */
+  --tile-8-bg: linear-gradient(135deg, #f2b179 0%, #ef9f59 100%);
+  --tile-8-text: #f9f6f2;
+  --tile-16-bg: linear-gradient(135deg, #f59563 0%, #f47c43 100%);
+  --tile-16-text: #f9f6f2;
+  --tile-32-bg: linear-gradient(135deg, #f67c5f 0%, #f45a3f 100%);
+  --tile-32-text: #f9f6f2;
+  --tile-64-bg: linear-gradient(135deg, #f65e3b 0%, #f43e1b 100%);
+  --tile-64-text: #f9f6f2;
+
+  /* Gold progression */
+  --tile-128-bg: linear-gradient(135deg, #edcf72 0%, #e8c347 100%);
+  --tile-128-text: #f9f6f2;
+  --tile-256-bg: linear-gradient(135deg, #edcc61 0%, #e7bf35 100%);
+  --tile-256-text: #f9f6f2;
+  --tile-512-bg: linear-gradient(135deg, #edc850 0%, #e6b823 100%);
+  --tile-512-text: #f9f6f2;
+  --tile-1024-bg: linear-gradient(135deg, #edc53f 0%, #e5b511 100%);
+  --tile-1024-text: #f9f6f2;
+  --tile-2048-bg: linear-gradient(135deg, #edc22e 0%, #d4ac0d 100%);
+  --tile-2048-text: #f9f6f2;
+
+  /* High value tiles */
+  --tile-high-bg: linear-gradient(135deg, #3c3a32 0%, #2c2a22 100%);
+  --tile-high-text: #f9f6f2;
+
+  /* Special effect colors with derived relationships */
+  --color-gold: #ffd700;
+  --color-gold-light: #ffed4e;
+  --border-high-tile: #666;
+
+  --glow-gold: color-mix(in srgb, var(--color-gold) 60%, transparent 40%);
+  --glow-gold-strong: color-mix(
+    in srgb,
+    var(--color-gold) 90%,
+    transparent 10%
+  );
+  --pulse-gold: color-mix(in srgb, #edc53f 40%, transparent 60%);
+  --pulse-gold-strong: color-mix(in srgb, #edc53f 80%, transparent 20%);
+
+  /* ========== RESPONSIVE BREAKPOINTS ========== */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+}
+
+/* ========== DARK MODE COLORS ========== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Background colors - Dark mode */
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #2d2d2d;
+    --bg-board: #3a3a3a;
+    --bg-cell-empty: #4a4a4a;
+    --bg-score-box: #3a3a3a;
+
+    /* Text colors - Dark mode */
+    --text-primary: #e0e0e0;
+    --text-secondary: #b0b0b0;
+    --text-light: #f9f6f2;
+    --text-muted: #666;
+    --text-score-label: #cccccc;
+    --text-score-value: #ffffff;
+
+    /* Border colors - Dark mode */
+    --border-cell: #555555;
+    --border-focus: #4d9eff;
+    --border-game-focus: #b0b0b0;
+
+    /* Button colors - Dark mode with derived relationships */
+    --btn-primary-base: #ff7043;
+    --btn-secondary-base: #616161;
+
+    --btn-primary-bg: var(--btn-primary-base);
+    --btn-primary-hover: color-mix(
+      in srgb,
+      var(--btn-primary-base) 80%,
+      #ffffff 20%
+    );
+    --btn-secondary-bg: var(--btn-secondary-base);
+    --btn-secondary-hover: color-mix(
+      in srgb,
+      var(--btn-secondary-base) 80%,
+      #ffffff 20%
+    );
+    --btn-disabled-bg: #424242;
+    --btn-text: var(--text-light);
+
+    /* Status colors - Dark mode */
+    --status-win-bg: #ffa726;
+    --status-game-over-bg: #ff9800;
+    --status-text: #000000;
+
+    /* ========== TILE COLORS - DARK MODE ========== */
+    /* Base tile colors - Enhanced for dark mode */
+    --tile-2-bg: linear-gradient(135deg, #424242 0%, #383838 100%);
+    --tile-2-text: #e0e0e0;
+    --tile-4-bg: linear-gradient(135deg, #525252 0%, #484848 100%);
+    --tile-4-text: #e0e0e0;
+
+    /* Orange progression - Adjusted for dark mode */
+    --tile-8-bg: linear-gradient(135deg, #e65100 0%, #d84315 100%);
+    --tile-8-text: #f9f6f2;
+    --tile-16-bg: linear-gradient(135deg, #ff6f00 0%, #f57c00 100%);
+    --tile-16-text: #f9f6f2;
+    --tile-32-bg: linear-gradient(135deg, #ff8f00 0%, #ff9800 100%);
+    --tile-32-text: #f9f6f2;
+    --tile-64-bg: linear-gradient(135deg, #ffa000 0%, #ffb300 100%);
+    --tile-64-text: #000000;
+
+    /* Gold progression - Enhanced visibility in dark mode */
+    --tile-128-bg: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+    --tile-128-text: #000000;
+    --tile-256-bg: linear-gradient(135deg, #ffd54f 0%, #ffc107 100%);
+    --tile-256-text: #000000;
+    --tile-512-bg: linear-gradient(135deg, #ffeb3b 0%, #ffd54f 100%);
+    --tile-512-text: #000000;
+    --tile-1024-bg: linear-gradient(135deg, #ffee58 0%, #ffeb3b 100%);
+    --tile-1024-text: #000000;
+    --tile-2048-bg: linear-gradient(135deg, #fff176 0%, #ffee58 100%);
+    --tile-2048-text: #000000;
+
+    /* High value tiles - Dark mode */
+    --tile-high-bg: linear-gradient(135deg, #6a1b9a 0%, #4a148c 100%);
+    --tile-high-text: #f9f6f2;
+
+    /* Special effect colors - Dark mode with derived relationships */
+    --color-gold: #ffc107;
+    --color-gold-light: #ffd54f;
+    --border-high-tile: #999;
+
+    --glow-gold: color-mix(in srgb, var(--color-gold) 60%, transparent 40%);
+    --glow-gold-strong: color-mix(
+      in srgb,
+      var(--color-gold) 90%,
+      transparent 10%
+    );
+    --pulse-gold: color-mix(in srgb, var(--color-gold) 40%, transparent 60%);
+    --pulse-gold-strong: color-mix(
+      in srgb,
+      var(--color-gold) 80%,
+      transparent 20%
+    );
+  }
+}
+
+/* ========== ACCESSIBILITY & MOTION ========== */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-fast: none;
+    --transition-normal: none;
+    --transition-slow: none;
+  }
+}
+
+/* ========== HIGH CONTRAST MODE ========== */
+@media (prefers-contrast: high) {
+  :root {
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 6px 16px rgba(0, 0, 0, 0.5);
+    --border-focus: #000000;
+  }
+
+  [data-theme='dark'] {
+    --border-focus: #ffffff;
+  }
+}
+
+/* ========== UTILITY CLASSES ========== */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+/* ========== ENHANCED THEME & ACCESSIBILITY SUPPORT ========== */
+
+/* Manual high contrast mode via data attribute */
+[data-high-contrast='true'] {
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4) !important;
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.5) !important;
+  --shadow-lg: 0 6px 16px rgba(0, 0, 0, 0.6) !important;
+  --border-focus: #000000 !important;
+}
+
+[data-high-contrast='true'][data-theme='dark'] {
+  --border-focus: #ffffff !important;
+}
+
+/* Manual theme overrides */
+[data-theme='light'] {
+  color-scheme: light;
+  /* Light mode variables already defined in main :root block */
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+  /* Apply dark mode variables manually */
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --bg-board: #3a3a3a;
+  --bg-cell-empty: #4a4a4a;
+  --bg-score-box: #3a3a3a;
+
+  --text-primary: #e0e0e0;
+  --text-secondary: #b0b0b0;
+  --text-light: #f9f6f2;
+  --text-muted: #666;
+  --text-score-label: #cccccc;
+  --text-score-value: #ffffff;
+
+  --border-cell: #555555;
+  --border-focus: #4d9eff;
+  --border-game-focus: #b0b0b0;
+
+  --btn-primary-base: #ff7043;
+  --btn-secondary-base: #616161;
+  --btn-primary-bg: var(--btn-primary-base);
+  --btn-primary-hover: color-mix(
+    in srgb,
+    var(--btn-primary-base) 80%,
+    #ffffff 20%
+  );
+  --btn-secondary-bg: var(--btn-secondary-base);
+  --btn-secondary-hover: color-mix(
+    in srgb,
+    var(--btn-secondary-base) 80%,
+    #ffffff 20%
+  );
+  --btn-disabled-bg: #424242;
+
+  --status-win-bg: #ffa726;
+  --status-game-over-bg: #ff9800;
+
+  --tile-2-bg: linear-gradient(135deg, #424242 0%, #383838 100%);
+  --tile-2-text: #e0e0e0;
+  --tile-4-bg: linear-gradient(135deg, #525252 0%, #484848 100%);
+  --tile-4-text: #e0e0e0;
+
+  --tile-8-bg: linear-gradient(135deg, #e65100 0%, #d84315 100%);
+  --tile-16-bg: linear-gradient(135deg, #ff6f00 0%, #f57c00 100%);
+  --tile-32-bg: linear-gradient(135deg, #ff8f00 0%, #ff9800 100%);
+  --tile-64-bg: linear-gradient(135deg, #ffa000 0%, #ffb300 100%);
+  --tile-64-text: #000000;
+
+  --tile-128-bg: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+  --tile-128-text: #000000;
+  --tile-256-bg: linear-gradient(135deg, #ffd54f 0%, #ffc107 100%);
+  --tile-256-text: #000000;
+  --tile-512-bg: linear-gradient(135deg, #ffeb3b 0%, #ffd54f 100%);
+  --tile-512-text: #000000;
+  --tile-1024-bg: linear-gradient(135deg, #ffee58 0%, #ffeb3b 100%);
+  --tile-1024-text: #000000;
+  --tile-2048-bg: linear-gradient(135deg, #fff176 0%, #ffee58 100%);
+  --tile-2048-text: #000000;
+
+  --tile-high-bg: linear-gradient(135deg, #6a1b9a 0%, #4a148c 100%);
+
+  --color-gold: #ffc107;
+  --color-gold-light: #ffd54f;
+  --border-high-tile: #999;
+  --glow-gold: color-mix(in srgb, var(--color-gold) 60%, transparent 40%);
+  --glow-gold-strong: color-mix(
+    in srgb,
+    var(--color-gold) 90%,
+    transparent 10%
+  );
+}
+
+/* Disable animations when user preference or manual setting */
+[data-reduce-motion='true'],
+[data-reduce-motion='true'] * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}

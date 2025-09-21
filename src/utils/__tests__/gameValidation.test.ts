@@ -5,7 +5,6 @@ import {
   hasWon,
   canMakeMove,
   isGameOver,
-  hasAvailableMoves,
 } from '../gameValidation'
 import { WIN_TILE } from '@/constants'
 import type { Board, Direction } from '@/types'
@@ -365,77 +364,6 @@ describe('gameValidation', () => {
     })
   })
 
-  describe('hasAvailableMoves', () => {
-    it('should return true if any direction has valid moves', () => {
-      const board: Board = [
-        [2, 2, null, null],
-        [null, null, null, null],
-        [null, null, null, null],
-        [null, null, null, null],
-      ]
-
-      expect(hasAvailableMoves(board)).toBe(true)
-    })
-
-    it('should return false if no direction has valid moves', () => {
-      const board: Board = [
-        [2, 4, 8, 16],
-        [32, 64, 128, 256],
-        [512, 1024, 2, 4],
-        [8, 16, 32, 64],
-      ]
-
-      expect(hasAvailableMoves(board)).toBe(false)
-    })
-
-    it('should check all four directions', () => {
-      // Board where only up move is valid
-      const board: Board = [
-        [null, null, null, null],
-        [2, 4, 8, 16],
-        [2, 32, 64, 128], // Can merge 2s vertically
-        [4, 256, 512, 1024],
-      ]
-
-      expect(hasAvailableMoves(board)).toBe(true)
-    })
-
-    it('should handle edge case with single possible move', () => {
-      const board: Board = [
-        [2, 4, 8, 16],
-        [32, 64, 128, 256],
-        [512, 1024, 4, 2],
-        [8, 16, 32, 2], // Only this 2 can merge with above 2
-      ]
-
-      expect(hasAvailableMoves(board)).toBe(true)
-    })
-
-    it('should be consistent with canMakeMove for empty cells', () => {
-      const boardWithEmptyCell: Board = [
-        [2, 4, 8, 16],
-        [32, 64, 128, 256],
-        [512, 1024, null, 4],
-        [8, 16, 32, 64],
-      ]
-
-      expect(hasAvailableMoves(boardWithEmptyCell)).toBe(true)
-      expect(canMakeMove(boardWithEmptyCell)).toBe(true)
-    })
-
-    it('should be consistent with canMakeMove for no moves', () => {
-      const noMovesBoard: Board = [
-        [2, 4, 8, 16],
-        [32, 64, 128, 256],
-        [512, 1024, 2, 4],
-        [8, 16, 32, 64],
-      ]
-
-      expect(hasAvailableMoves(noMovesBoard)).toBe(false)
-      expect(canMakeMove(noMovesBoard)).toBe(false)
-    })
-  })
-
   describe('integration tests', () => {
     it('should handle typical game progression scenarios', () => {
       // Early game - lots of empty space
@@ -504,7 +432,6 @@ describe('gameValidation', () => {
           canMakeMove(board)
           isGameOver(board)
           hasWon(board)
-          hasAvailableMoves(board)
 
           const directions: Direction[] = ['left', 'right', 'up', 'down']
           directions.forEach(direction => {

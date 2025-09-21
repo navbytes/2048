@@ -57,6 +57,7 @@ const Modal: React.FC<ModalProps> = ({
       previousFocusRef.current.focus()
       previousFocusRef.current = null
     }
+    return undefined
   }, [isOpen])
 
   if (!isOpen) return null

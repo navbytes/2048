@@ -4,6 +4,7 @@ import { resolve } from 'path'
 
 export default defineConfig({
   plugins: [react()],
+  base: process.env.NODE_ENV === 'production' ? '/2048/' : '/',
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
@@ -30,7 +31,6 @@ export default defineConfig({
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
-          router: ['react-router-dom'],
         },
       },
     },

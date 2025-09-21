@@ -68,10 +68,3 @@ export function canMakeMove(board: Board): boolean {
 export function isGameOver(board: Board): boolean {
   return !canMakeMove(board)
 }
-
-// Utility function to check if any move is possible
-export function hasAvailableMoves(board: Board): boolean {
-  // Brute force check across all directions - acceptable for 4x4 grid
-  const directions: Direction[] = ['left', 'right', 'up', 'down']
-  return directions.some(direction => isValidMove(board, direction))
-}

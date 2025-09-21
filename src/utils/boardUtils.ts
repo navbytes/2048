@@ -33,14 +33,17 @@ export function getEmptyCells(
   return emptyCells
 }
 
-export function addRandomTile(board: Board): Board {
+export function addRandomTile(
+  board: Board,
+  probabilityOfTwo = PROBABILITY_OF_TWO
+): Board {
   const emptyCells = getEmptyCells(board)
   if (emptyCells.length === 0) return board
 
   const randomCell = emptyCells[Math.floor(Math.random() * emptyCells.length)]
   if (!randomCell) return board
 
-  const newValue = Math.random() < PROBABILITY_OF_TWO ? 2 : 4
+  const newValue = Math.random() <= probabilityOfTwo ? 2 : 4
 
   // Deep clone board to maintain immutability for React state management
   const newBoard = board.map(row => [...row])
@@ -57,7 +60,7 @@ export function createInitialBoard(): Board {
 
   // Sequential placement prevents race conditions in random cell selection
   for (let i = 0; i < INITIAL_TILES_COUNT; i++) {
-    board = addRandomTile(board)
+    board = addRandomTile(board, 1) // Force '2' for initial tiles for better game start
   }
 
   return board

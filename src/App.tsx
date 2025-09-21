@@ -2,7 +2,6 @@ import clsx from 'clsx'
 import GameBoard from './components/GameBoard'
 import GameControls from './components/GameControls'
 import Settings from './components/Settings'
-import HintButton from './components/HintButton'
 import { useGameStore } from './store'
 import styles from '@/styles/App.module.css'
 
@@ -11,10 +10,7 @@ function App() {
 
   return (
     <div className={styles.app}>
-      <div className={styles.topBar}>
-        <Settings />
-        <HintButton />
-      </div>
+      <Settings />
 
       <h1 className={styles.title}>2048</h1>
       <p className={styles.subtitle}>

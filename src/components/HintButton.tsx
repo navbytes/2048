@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { useGameStore } from '../store/gameStore'
 import { useAIHints } from '../hooks/useAIHints'
-import { HelpCircle, WandSparkles, X } from 'lucide-react'
+import { HelpCircle, WandSparkles } from 'lucide-react'
+import Modal from './Modal'
 import styles from '@/styles/HintButton.module.css'
 
 interface HintButtonProps {
@@ -37,12 +38,6 @@ const HintButton: React.FC<HintButtonProps> = ({ className }) => {
   const closeHint = () => {
     setShowHint(false)
     clearError()
-  }
-
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      closeHint()
-    }
   }
 
   if (!isConfigured) {
@@ -129,35 +124,24 @@ const HintButton: React.FC<HintButtonProps> = ({ className }) => {
         onClick={handleGetHint}
         disabled={isLoading || gameOver}
         title={gameOver ? 'Game over' : 'Get AI hint for next move'}
+        type='button'
       >
         {isLoading ? (
           <div className={styles.spinner} />
         ) : (
-          <WandSparkles size={18} className={styles.icon || ''} />
+          <WandSparkles size={18} />
         )}
+        {!isLoading && 'AI Hint'}
       </button>
 
       {/* Hint Modal */}
-      {showHint && (lastHint || error) && (
-        <div className={styles.backdrop} onClick={handleBackdropClick}>
-          <div className={styles.modal}>
-            <div className={styles.header}>
-              <h3 className={styles.title}>
-                {error ? 'Error' : 'AI Suggestion'}
-              </h3>
-              <button
-                className={styles.closeButton}
-                onClick={closeHint}
-                aria-label='Close hint'
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            <div className={styles.content}>{renderHintContent()}</div>
-          </div>
-        </div>
-      )}
+      <Modal
+        isOpen={showHint && (lastHint || error) !== null}
+        onClose={closeHint}
+        title={error ? 'Error' : 'AI Suggestion'}
+      >
+        {renderHintContent()}
+      </Modal>
     </>
   )
 }

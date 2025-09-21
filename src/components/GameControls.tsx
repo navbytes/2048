@@ -3,6 +3,7 @@ import clsx from 'clsx'
 import { useGameStore } from '@/store'
 import { RotateCcw, Plus } from 'lucide-react'
 import styles from '@/styles/GameControls.module.css'
+import HintButton from './HintButton'
 
 const GameControls: React.FC = memo(() => {
   const { score, bestScore, canUndo, newGame, undo } = useGameStore()
@@ -46,6 +47,7 @@ const GameControls: React.FC = memo(() => {
           <RotateCcw size={18} />
           Undo
         </button>
+        <HintButton />
       </div>
     </div>
   )

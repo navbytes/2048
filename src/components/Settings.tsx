@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
-import { useSettingsStore, type DisplayMode } from '../store/settingsStore'
-import { GearIcon } from './icons'
+import { useSettingsStore, type LLM_PROVIDER } from '../store/settingsStore'
+import { Settings as SettingsIcon, X } from 'lucide-react'
 import styles from '@/styles/Settings.module.css'
+import type { DisplayMode } from '@/constants'
 
 interface SettingsProps {
   className?: string
@@ -17,12 +18,16 @@ const Settings: React.FC<SettingsProps> = ({ className }) => {
     soundEffects,
     autoSave,
     displayMode,
+    llmApiKey,
+    llmProvider,
     setTheme,
     setAnimationsEnabled,
     setHighContrast,
     setSoundEffects,
     setAutoSave,
     setDisplayMode,
+    setLlmApiKey,
+    setLlmProvider,
   } = useSettingsStore()
 
   const toggleSettings = () => {
@@ -48,7 +53,7 @@ const Settings: React.FC<SettingsProps> = ({ className }) => {
         aria-label='Open settings'
         title='Settings'
       >
-        <GearIcon size={20} className={styles.gearIcon || ''} />
+        <SettingsIcon size={20} className={styles.gearIcon || ''} />
       </button>
 
       {/* Settings Popup */}
@@ -62,17 +67,7 @@ const Settings: React.FC<SettingsProps> = ({ className }) => {
                 onClick={closeSettings}
                 aria-label='Close settings'
               >
-                <svg
-                  viewBox='0 0 24 24'
-                  fill='none'
-                  stroke='currentColor'
-                  strokeWidth='2'
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                >
-                  <line x1='18' y1='6' x2='6' y2='18' />
-                  <line x1='6' y1='6' x2='18' y2='18' />
-                </svg>
+                <X size={20} />
               </button>
             </div>
 
@@ -190,6 +185,83 @@ const Settings: React.FC<SettingsProps> = ({ className }) => {
                     </select>
                   </label>
                 </div>
+              </div>
+
+              <div className={styles.section}>
+                <h4 className={styles.sectionTitle}>AI Assistant</h4>
+
+                <div className={styles.setting}>
+                  <label className={styles.label}>
+                    <span className={styles.labelText}>
+                      LLM Provider
+                      <small
+                        style={{
+                          display: 'block',
+                          fontWeight: 'normal',
+                          fontSize: '12px',
+                          color: 'var(--text-muted)',
+                          marginTop: '2px',
+                        }}
+                      >
+                        Choose your AI provider for hints
+                      </small>
+                    </span>
+                    <select
+                      className={styles.select}
+                      value={llmProvider}
+                      onChange={e =>
+                        setLlmProvider(e.target.value as LLM_PROVIDER)
+                      }
+                    >
+                      <option value='openai'>OpenAI (GPT)</option>
+                      <option value='anthropic'>Anthropic (Claude)</option>
+                      <option value='gemini'>Google (Gemini)</option>
+                    </select>
+                  </label>
+                </div>
+
+                <div className={styles.setting}>
+                  <label
+                    className={styles.label}
+                    style={{ flexDirection: 'column', alignItems: 'stretch' }}
+                  >
+                    <span
+                      className={styles.labelText}
+                      style={{ marginBottom: 'var(--spacing-sm)' }}
+                    >
+                      API Key
+                      <small
+                        style={{
+                          display: 'block',
+                          fontWeight: 'normal',
+                          fontSize: '12px',
+                          color: 'var(--text-muted)',
+                          marginTop: '2px',
+                        }}
+                      >
+                        Your API key is stored locally and never shared
+                      </small>
+                    </span>
+                    <input
+                      type='password'
+                      className={styles.input}
+                      value={llmApiKey}
+                      onChange={e => setLlmApiKey(e.target.value)}
+                      placeholder='Enter your API key...'
+                    />
+                  </label>
+                </div>
+              </div>
+
+              <div className={styles.section}>
+                <h4 className={styles.sectionTitle}>How to play</h4>
+                <p className={styles.aboutText}>
+                  Use your arrow keys to move the tiles.
+                </p>
+                <p className={styles.version}>
+                  When two tiles with the same number touch, they merge into
+                  one!
+                </p>
               </div>
 
               <div className={styles.section}>

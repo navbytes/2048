@@ -25,6 +25,7 @@
     "@hookform/resolvers": "5.2.2",
     "clsx": "2.1.1",
     "debug": "4.4.3",
+    "lucide-react": "0.544.0",
     "react": "19.1.1",
     "react-dom": "19.1.1",
     "react-hook-form": "7.63.0",

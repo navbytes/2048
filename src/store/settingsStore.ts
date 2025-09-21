@@ -2,6 +2,7 @@ import type { Theme, DisplayMode } from '@/constants'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
+export type LLM_PROVIDER = 'openai' | 'anthropic' | 'gemini'
 interface SettingsState {
   // Appearance settings
   theme: Theme
@@ -13,6 +14,10 @@ interface SettingsState {
   autoSave: boolean
   displayMode: DisplayMode
 
+  // AI/LLM settings
+  llmApiKey: string
+  llmProvider: LLM_PROVIDER
+
   // Actions
   setTheme: (theme: Theme) => void
   setAnimationsEnabled: (enabled: boolean) => void
@@ -20,6 +25,8 @@ interface SettingsState {
   setSoundEffects: (enabled: boolean) => void
   setAutoSave: (enabled: boolean) => void
   setDisplayMode: (mode: DisplayMode) => void
+  setLlmApiKey: (apiKey: string) => void
+  setLlmProvider: (provider: LLM_PROVIDER) => void
   resetSettings: () => void
 }
 
@@ -30,6 +37,8 @@ const defaultSettings = {
   soundEffects: true,
   autoSave: true,
   displayMode: 'normal' as DisplayMode,
+  llmApiKey: '',
+  llmProvider: 'gemini' as const,
 }
 
 export const useSettingsStore = create<SettingsState>()(
@@ -57,6 +66,10 @@ export const useSettingsStore = create<SettingsState>()(
       setAutoSave: autoSave => set({ autoSave }),
 
       setDisplayMode: displayMode => set({ displayMode }),
+
+      setLlmApiKey: llmApiKey => set({ llmApiKey }),
+
+      setLlmProvider: llmProvider => set({ llmProvider }),
 
       resetSettings: () => {
         set(defaultSettings)

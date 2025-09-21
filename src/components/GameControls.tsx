@@ -1,6 +1,7 @@
 import { memo, useMemo } from 'react'
 import clsx from 'clsx'
 import { useGameStore } from '@/store'
+import { RotateCcw, Plus } from 'lucide-react'
 import styles from '@/styles/GameControls.module.css'
 
 const GameControls: React.FC = memo(() => {
@@ -33,6 +34,7 @@ const GameControls: React.FC = memo(() => {
 
       <div className={styles.buttonsContainer}>
         <button onClick={newGame} className={primaryButtonClass} type='button'>
+          <Plus size={18} />
           New Game
         </button>
         <button
@@ -41,6 +43,7 @@ const GameControls: React.FC = memo(() => {
           className={undoButtonClass}
           type='button'
         >
+          <RotateCcw size={18} />
           Undo
         </button>
       </div>

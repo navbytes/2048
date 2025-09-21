@@ -2,6 +2,7 @@ import clsx from 'clsx'
 import GameBoard from './components/GameBoard'
 import GameControls from './components/GameControls'
 import Settings from './components/Settings'
+import HintButton from './components/HintButton'
 import { useGameStore } from './store'
 import styles from '@/styles/App.module.css'
 
@@ -10,7 +11,10 @@ function App() {
 
   return (
     <div className={styles.app}>
-      <Settings />
+      <div className={styles.topBar}>
+        <Settings />
+        <HintButton />
+      </div>
 
       <h1 className={styles.title}>2048</h1>
       <p className={styles.subtitle}>
@@ -32,11 +36,6 @@ function App() {
       )}
 
       <GameBoard />
-
-      <div className={styles.instructions}>
-        <strong>How to play:</strong> Use your arrow keys to move the tiles.
-        When two tiles with the same number touch, they merge into one!
-      </div>
     </div>
   )
 }
